@@ -30,10 +30,8 @@ Contact Information:
 */
 
 
+// getSuggestions gets the subset of possiblities than start with input 
 function getSuggestions(input,possibilities){
-	if(input.length == 0){
-	//	return {};
-	}
 
 	suggestions = {};
 	for (field in possibilities) {
@@ -47,12 +45,14 @@ function getSuggestions(input,possibilities){
 	return suggestions ;
 }
 
+// cleanInput is necessary to remove extra tags that get added by the browser
 function cleanInput(input){
 	input = input.replace('<div>','');
 	input = input.replace('</div>','');
 	return input.replace('<br>','');
 }
 
+// suggestionString prepares a formatted string based on the list of suggestions
 function suggestionString(suggestions){
 	if($.isEmptyObject(suggestions)){
 		return '';
@@ -68,6 +68,7 @@ function suggestionString(suggestions){
 	return string ;
 }
 
+// completeString finishes the input string with the end characters of the first suggestion
 function completeString(input,suggestions){
 
 	if(input.length == 0 || $.isEmptyObject(suggestions)){
@@ -85,6 +86,7 @@ function completeString(input,suggestions){
 	}
 }
 
+// This anonymous function extends jQuery with a function to turn a regular html element into a WMenu navbar
 (function($){
 	$.fn.wmenu = function(possibilities, defaultText){
 

@@ -1,7 +1,7 @@
 /*
 
 wmenu - A command based website navigation plugin for jQuery, inspired by Dmenu and Vim
-Copyright (C) 2012  Tom Shehan
+Copyright (C) 2012-2013 Tom Shehan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,15 @@ Notes:
  - In the future it the efficiency should be increased to make ajax calls for suggestions feasible.
  - In the future the whole thing should by stylable and support several other options for flexibility
  - In the future the suggestions should be ordered alphabetically
+
+
+ - The problem when this gets improved to work with ajax will be that the getSuggestions function 
+   should not request some url every time the input changes. It should adjust the current suggestion
+   list depending on whether the change was a backspace or a new character. This will require a 
+   history tree so that the an ajax request will only be called if the list needs to be generalized to
+   a less restricted subset of all potential commands that has not been used yet. In this way, the load
+   will be shifted to the client.
+
 
 Contact Information:
 -------------------

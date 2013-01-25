@@ -35,12 +35,17 @@ function getSuggestions(input,possibilities){
 
 	suggestions = {};
 	for (field in possibilities) {
+
+		// this was a workaround. I don't remember for what.
 		if (!possibilities.hasOwnProperty(field)) {
 			continue;
 		}
+
+		// if the word in possibilities starts with the input, add the word to the suggestion list
 		if(field.toLowerCase().indexOf(input.toLowerCase()) == 0){
 			suggestions[field] = possibilities[field];
 		}
+
 	}
 	return suggestions ;
 }
@@ -54,17 +59,23 @@ function cleanInput(input){
 
 // suggestionString prepares a formatted string based on the list of suggestions
 function suggestionString(suggestions){
+
 	if($.isEmptyObject(suggestions)){
 		return '';
 	}
-	string ='';
+
+	string = '';
 	for (field in suggestions) {
+
+		// Again, I dont remember what this does
 		if (!suggestions.hasOwnProperty(field)) {
 			continue;
 		}
+
 		string += field + '&nbsp;&nbsp;-&nbsp;&nbsp;';
 	}
-	string = string.substring(0, string.length - 13);
+
+	string = string.substring(0, string.length - 13); // Remove trailing spaces and hyphen
 	return string ;
 }
 
@@ -77,49 +88,59 @@ function completeString(input,suggestions){
 
 	string ='';
 	for (field in suggestions) {
+
+		// This is the workaround again
 		if (!suggestions.hasOwnProperty(field)) {
 			continue;
 		}
+
 		string += field;
 		string = string.substring(input.length);
 		return string ;
 	}
 }
 
-// This anonymous function extends jQuery with a function to turn a regular html element into a WMenu navbar
+// This anonymous function extends jQuery with a function to turn a regular
+// html element into a WMenu navbar using the above functions
 (function($){
 	$.fn.wmenu = function(possibilities, defaultText){
 
-		if(defaultText == null ){
+		// make sure defaultText is initialized
+		if( defaultText == null ){
 			defaultText = '';
 		}
 
+		// keyboard Shortcut to focus on Shift+Colon like vim
+		// attempts to be cross-browser compatible 
+		var shift_key = false;
+		$(document).keyup(function (key) {
+			if(key.which == 16){
+				shift_key=false;
+			}
+		})	
+		$(document).keydown(function (key) {
+			if(key.which == 16){
+				shift_key=true;
+			}
+			if((key.which == 59 || key.which == 186 || key.which == 56) && shift_key == true) {
+				$('#'+input_id).focus();
+				$('#'+input_id).html('');
+				shift_key = false ;
+				return false;
+			}
+		});
+
+
+		// Initialize the default values
+		// TODO: only do this if no values are supplied to the function, add parameters to the function
 		input_style = {};
 		complete_style = {};
 		suggestion_style = {};
 		style = {};
 
 
-		// Keyboard Shortcut to focus
-		var isShift = false;
-		$(document).keyup(function (e) {
-			if(e.which == 16){
-				isShift=false;
-			}
-		})
-		$(document).keydown(function (e) {
-			if(e.which == 16){
-				isShift=true;
-			}
-			if((e.which == 59 || e.which == 186 || e.which == 56) && isShift == true) {
-				$('#'+input_id).focus();
-				$('#'+input_id).html('');
-				isShift = false ;
-				return false;
-			}
-		});
-
-
+		// TODO: For every default style below, only apply it if it doesn't already have a value in the array
+		
 		// Default style for the outer div
 		style.display = 'block';
 		style.padding = '0';
